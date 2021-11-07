@@ -63,9 +63,9 @@ Ils sont aussi dans le dossier `cluster` et leur préfixe est `_centers`.
 Et les sous clusters sont stockés avec le préfixe `_ss_cl`.
 
 # Librairies utilisées
-`pandas` qui permet de lire les jeux de données, de les stocker sous forme de dataframes
+- `pandas` qui permet de lire les jeux de données, de les stocker sous forme de dataframes
 et de les manipuler facilement.
-`sklearn` qui permet de faire le clustering
+- `sklearn` qui permet de faire le clustering
 
 # Autres commentaires
 Le code propre est situé dans le fichier `clustering_clean.ipynb`. Mais la version étape
