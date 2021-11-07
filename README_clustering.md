@@ -46,10 +46,16 @@ car on cherche à remplir une remorque à la fois.
 
 Nous avons choisi de réaliser un nouveau clustering afin de regrouper les ballots
 les plus proches pour les ramasser en même temps avec le chargeur. Ainsi, le nombre de
-clusters souhaité est l'arrondi supérieur du nombre de ballots sur le nombre maximal
-de ballot par chargeur. Et le nombre maximal d'individus par cluster est défini de
+sous-clusters souhaité est l'arrondi supérieur du nombre de ballots sur le nombre maximal
+de ballot par chargeur. Et le nombre maximal d'individus par sous-cluster est défini de
 la même façon que précédemment. Les variables utilisées pour ce clustering ont en
 général le même nom que pour le premier, suivi du suffixe `_camion`.
+
+Pour l'ordre de ramassage, on choisit de commencer par les
+sous-clusters les plus proches du centre du cluster (une justification étant d'éviter
+d'être gêné par les sous-clusters proches quand on va chercher ceux qui sont loin).
+Ensuite on choisit pour chaque cluster de ramasser les ballots les plus proches en 
+premier, avec la même justification. On fait donc un tri selon ces deux critères.
 
 ## Exportation des fichiers
 Pour l'affichage sur l'application web, on exporte les fichiers csv des ballots
