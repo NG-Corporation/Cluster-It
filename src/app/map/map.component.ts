@@ -11,6 +11,8 @@ export class MapComponent implements AfterViewInit {
 
   map: any;
 
+  clusters: any;
+  centers: any;
 
     greenIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -67,6 +69,9 @@ export class MapComponent implements AfterViewInit {
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
   });
+
+
+
   
   
   
@@ -109,6 +114,8 @@ export class MapComponent implements AfterViewInit {
     //return result; //JavaScript object
     console.log(result[0]["cluster"]); //JSON
   }
+
+
 //parse pour les centres
   csvJSON2(csv) {
 
@@ -140,6 +147,69 @@ export class MapComponent implements AfterViewInit {
     console.log(result[0]["cluster"]); //JSON
   }
 
+  csvJSON3(csv,cluster) {
+
+    var lines = csv.split("\n");
+
+    var result = [];
+
+    // NOTE: If your columns contain commas in their values, you'll need
+    // to deal with those before doing the next step
+    // (you might convert them to &&& or something, then covert them back later)
+    // jsfiddle showing the issue https://jsfiddle.net/
+    var headers = lines[0].split(",");
+
+    for (var i = 1; i < lines.length; i++) {
+
+      var obj = {} as any;
+      var currentline = lines[i].split(",");
+
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+        
+      }
+
+      result.push(obj);
+      
+      this.addSS(obj,cluster);
+      
+    }
+  }
+
+
+    csvJSON4(csv,center){
+
+      var lines = csv.split("\n");
+  
+      var result = [];
+  
+      // NOTE: If your columns contain commas in their values, you'll need
+      // to deal with those before doing the next step
+      // (you might convert them to &&& or something, then covert them back later)
+      // jsfiddle showing the issue https://jsfiddle.net/
+      var headers = lines[0].split(",");
+  
+      for (var i = 1; i < lines.length; i++) {
+  
+        var obj = {} as any;
+        var currentline = lines[i].split(",");
+  
+        for (var j = 0; j < headers.length; j++) {
+          obj[headers[j]] = currentline[j];
+          
+        }
+  
+        result.push(obj);
+        
+        this.addcenterSS(obj,center);
+        
+      }
+
+    //return result; //JavaScript object
+    console.log(result[0]["cluster"]); //JSON
+  }
+
+
 
   readFile(event) {
 
@@ -148,7 +218,7 @@ export class MapComponent implements AfterViewInit {
     var reader = new FileReader();
     reader.onload = (event) => {
 
-
+      this.clusters=reader.result;
       this.csvJSON(reader.result);
     }
     reader.readAsText(file);
@@ -162,13 +232,12 @@ export class MapComponent implements AfterViewInit {
     var reader = new FileReader();
     reader.onload = (event) => {
 
-
+      this.centers=reader.result;
       this.csvJSON2(reader.result);
     }
     reader.readAsText(file);
 
   }
-
 
 
   addmarkers(balle) {
@@ -229,10 +298,82 @@ export class MapComponent implements AfterViewInit {
     
     }
 
-
+  
     
   }
   
+  addcenterSS(balle,cluster) {
+
+    if (balle['latitude']!== undefined && balle['longitude']!==undefined){
+      var x :number = +balle['latitude']
+      var y :number = +balle['longitude']
+      
+
+    if (+balle['cluster']===cluster){
+      console.log(balle);
+    var coordonnees = {
+      lat: x, lon: y
+    }
+    console.log(coordonnees)
+    const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.redIcon  }); marker.addTo(this.map);
+  
+
+    this.map.panTo(new L.LatLng(coordonnees.lat, coordonnees.lon));
+    
+    }
+  }
+  
+    
+  }
+  addSS(balle,cluster){
+    console.log(balle)
+
+    console.log(balle["latitude"])
+
+    if (balle['latitude']!== undefined && balle['longitude']!==undefined){
+      var x :number = +balle['latitude']
+      var y :number = +balle['longitude']
+      var subcluster: number= +balle['subcluster']
+      console.log("addSS if")
+    
+    var coordonnees = {
+      lat: x, lon: y
+    }
+    console.log(coordonnees)
+    
+    if (+balle['cluster']===cluster){
+    if(subcluster===1){
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.greenIcon }); marker.addTo(this.map);
+      
+    }
+
+    else if(subcluster==2){
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.blueIcon }); marker.addTo(this.map);
+    }
+    else if(subcluster==3){
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.yellowIcon }); marker.addTo(this.map);
+    }
+    else if(subcluster==4){
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.violetIcon }); marker.addTo(this.map);
+    }
+    else if(subcluster==5){
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.goldIcon }); marker.addTo(this.map);
+    }
+
+    else {
+      const marker = L.marker([coordonnees.lat, coordonnees.lon], { icon: this.orangeIcon }); marker.addTo(this.map);
+
+      
+    }
+
+  }
+    
+    }
+
+
+
+
+  }
   createMap() {
 
     const coordonnees = {
@@ -256,12 +397,27 @@ export class MapComponent implements AfterViewInit {
     mainLayer.addTo(this.map);
 
 
-    
+  }
 
+  clean(){
+  
+  this.map.remove();
+  this.createMap();
+  
 
   }
 
 
 
+  redirect(cluster){
+    
+    this.clean();
+    
+    this.csvJSON3(this.clusters,cluster);
+    this.csvJSON4(this.centers,cluster);
+    
+
+  }
+  
 
 }
