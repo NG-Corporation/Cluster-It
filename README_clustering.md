@@ -53,14 +53,12 @@ général le même nom que pour le premier, suivi du suffixe `_camion`.
 
 ## Exportation des fichiers
 Pour l'affichage sur l'application web, on exporte les fichiers csv des ballots
-avec leur latitude, leur longitude et le cluster auquel ils appartiennent. Ils sont
-dans le dossier `cluster` et ont pour nom le nom du jeu de données lu suivi de `_cl`.
+avec leur latitude, leur longitude, le cluster et le sous-cluster auquel ils appartiennent. Ils sont
+dans le dossier `cluster` et ont pour nom le nom du jeu de données lu suivi de `_ss_cl`.
 
-De même on exporte les centres des clusters avec les même colonnes. Ce fichier
-contient donc autant de lignes que de nombre de clusters dans le clustering.
+De même on exporte les centres des clusters (issus du 1etr clutering) avec les même colonnes. Ce fichier
+contient donc autant de lignes que de nombre de clusters dans ce clustering. Il correspond aux coordonnées des remorques.
 Ils sont aussi dans le dossier `cluster` et leur préfixe est `_centers`.
-
-Et les sous clusters sont stockés avec le préfixe `_ss_cl`.
 
 # Librairies utilisées
 - `pandas` qui permet de lire les jeux de données, de les stocker sous forme de dataframes
